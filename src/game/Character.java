@@ -3,11 +3,13 @@ package game;
 import java.util.List;
 
 public class Character {
-    private String identifier;
+    private final String identifier;
+    private final String name;
     private ExchangeTable exchangeTable;
 
-    public Character() {
-
+    public Character(String identifier, String name) {
+        this.identifier = identifier;
+        this.name = name;
     }
 
     public String talk() {

@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class Location {
-    private String identifier;
-    private String description;
+    private final String identifier;
+    private final String description;
     private List<Item> items;
     private List<Character> characters;
     private List<Fixture> fixtures;
     private List<Exit> exits;
 
-    public Location() {
-
+    public Location(String identifier, String description) {
+        this.identifier = identifier;
+        this.description = description;
     }
 
     public String describe() {
@@ -35,11 +36,11 @@ public class Location {
         return Optional.empty();
     }
 
-    public GetLocationResult getLocation(String identifier) {
+    public GetDestinationResult getLocation(String identifier) {
         return null;
     }
 
-    public boolean unlockExit(String locationIdentifier, String keyIdentifier) {
-        return true;
+    public UnlockExitStatus unlockExit(String locationIdentifier, String keyIdentifier) {
+        return UnlockExitStatus.SUCCESS;
     }
 }

@@ -33,7 +33,9 @@ public class Location {
     }
 
     public Optional<Character> getCharacter(String identifier) {
-        return Optional.empty();
+        return characters.stream()
+                .filter(character -> character.getIdentifier().equals(identifier))
+                .findFirst();
     }
 
     public GetDestinationResult getLocation(String identifier) {

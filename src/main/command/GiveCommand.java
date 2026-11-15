@@ -29,7 +29,11 @@ public class GiveCommand extends Command {
         Matcher matcher = CommandConstants.GIVE_COMMAND_PATTERN.matcher(userInput);
 
         if (matcher.matches()) {
-            itemIdentifiers = Arrays.stream(matcher.group(1).split(",")).map(String::strip).filter(s -> !s.isBlank()).toList();
+            itemIdentifiers = Arrays.stream(matcher.group(1).split(","))
+                    .map(String::strip)
+                    .filter(s -> !s.isBlank())
+                    .distinct()
+                    .toList();
             characterIdentifier = matcher.group(2).strip();
 
             if (itemIdentifiers.isEmpty() || characterIdentifier.isBlank()) {

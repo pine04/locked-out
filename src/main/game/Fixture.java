@@ -13,6 +13,14 @@ public class Fixture {
     }
 
     public ExchangeResult interact(List<Item> items) {
-        return null;
+        return exchangeTable.exchange(items);
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public String getName() {
+        return name;
     }
 }

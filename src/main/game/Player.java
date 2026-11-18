@@ -34,7 +34,7 @@ public class Player {
         return "";
     }
 
-    public String useOn(String itemIdentifier, String fixtureIdentifier) {
+    public String useOn(String fixtureIdentifier, List<String> itemIdentifiers) {
         return "";
     }
 

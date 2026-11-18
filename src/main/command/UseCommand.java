@@ -2,9 +2,10 @@ package command;
 
 import game.Player;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
+
+import static utils.StringUtils.splitAndDedupe;
 
 public class UseCommand extends Command {
     private List<String> itemIdentifiers;
@@ -29,7 +30,7 @@ public class UseCommand extends Command {
         Matcher matcher = CommandConstants.USE_COMMAND_PATTERN.matcher(userInput);
 
         if (matcher.matches()) {
-            itemIdentifiers = Arrays.stream(matcher.group(1).split(",")).map(String::strip).filter(s -> !s.isBlank()).toList();
+            itemIdentifiers = splitAndDedupe(matcher.group(1), ",");
             fixtureIdentifier = matcher.group(2).strip();
 
             if (itemIdentifiers.isEmpty() || fixtureIdentifier.isBlank()) {

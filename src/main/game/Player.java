@@ -54,7 +54,21 @@ public class Player {
     }
 
     public String useOn(String fixtureIdentifier, List<String> itemIdentifiers) {
-        return "";
+        Optional<Fixture> fixtureOpt = location.getFixture(fixtureIdentifier);
+        if (fixtureOpt.isEmpty()) {
+            return String.format("There is no %s in this location.", fixtureIdentifier);
+        }
+
+        List<Item> items = inventory.getMany(itemIdentifiers);
+        if (items.size() < itemIdentifiers.size()) {
+            return buildMissingItemsMessage(itemIdentifiers, items);
+        }
+
+        Fixture fixture = fixtureOpt.get();
+        ExchangeResult giveResult = fixture.interact(items);
+        List<Item> abandonedItems = handleExchangeResult(giveResult);
+
+        return buildUseOnMessage(fixture, giveResult, abandonedItems);
     }
 
     public String moveTo(String locationIdentifier) {
@@ -118,6 +132,34 @@ public class Player {
             messages.add(
                     String.format("%s accepts your %s but needs something else to go with them.", character.getName(),
                                   StringUtils.joinWithAnd(itemNames)));
+        }
+        return String.join("\n\n", messages);
+    }
+
+    private String buildUseOnMessage(Fixture fixture, ExchangeResult exchangeResult, List<Item> abandonedItems) {
+        List<String> messages = new ArrayList<>();
+        if (!exchangeResult.getRejectedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getRejectedItems().stream().map(Item::identifier).toList();
+            messages.add(
+                    String.format("You can't use %s on %s.", StringUtils.joinWithAnd(itemNames), fixture.getName()));
+        }
+        if (!exchangeResult.getReturnedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getReturnedItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("You can still keep your %s after using them on %s.",
+                                       StringUtils.joinWithAnd(itemNames), fixture.getName()));
+        }
+        if (!exchangeResult.getRewardedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getRewardedItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("You receive %s from %s as a reward.", StringUtils.joinWithAnd(itemNames),
+                                       fixture.getName()));
+        }
+        if (!abandonedItems.isEmpty()) {
+            messages.add(buildAbandonedItemsMessage(abandonedItems));
+        }
+        if (!exchangeResult.getWithheldItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getWithheldItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("You use %s on %s, but perhaps something else is also needed.",
+                                       StringUtils.joinWithAnd(itemNames), fixture.getName()));
         }
         return String.join("\n\n", messages);
     }

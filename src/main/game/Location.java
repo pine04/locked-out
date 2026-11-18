@@ -29,7 +29,9 @@ public class Location {
     }
 
     public Optional<Fixture> getFixture(String identifier) {
-        return Optional.empty();
+        return fixtures.stream()
+                .filter(fixture -> fixture.getIdentifier().equals(identifier))
+                .findFirst();
     }
 
     public Optional<Character> getCharacter(String identifier) {

@@ -70,8 +70,18 @@ public class UseCommandTest {
     }
 
     @Test
+    public void givenCommandWithDuplicateItemIds_whenParse_shouldExecuteWithDedupedIds() {
+        CommandParseStatus status = command.tryParse("use ring,ring,RiNG  ,  RIng, rING -> oven");
+        command.execute();
+
+        assertEquals(CommandParseStatus.SUCCESS, status);
+        verify(player).useOn("oven", List.of("ring"));
+    }
+
+    @Test
     public void givenCorrectCommandWithSpaces_whenParseAndExecute_shouldExecuteWithCorrectlyTrimmedParameters() {
-        CommandParseStatus status = command.tryParse("   use    pizza base,    tomato    sauce     , pepperoni      ->     oven        ");
+        CommandParseStatus status =
+                command.tryParse("   use    pizza base,    tomato    sauce     , pepperoni      ->     oven        ");
         command.execute();
 
         assertEquals(CommandParseStatus.SUCCESS, status);

@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class StringUtils {
@@ -17,5 +18,13 @@ public class StringUtils {
         }
 
         return String.join(", ", nouns.subList(0, nouns.size() - 1)) + ", and " + nouns.getLast();
+    }
+
+    public static List<String> splitAndDedupe(String inputString, String separator) {
+        return Arrays.stream(inputString.split(separator))
+                .map(String::strip)
+                .filter(s -> !s.isBlank())
+                .distinct()
+                .toList();
     }
 }

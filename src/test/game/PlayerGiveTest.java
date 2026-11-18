@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +46,7 @@ public class PlayerGiveTest {
         itemIds.add("cheese");
 
         when(inventory.getMany(itemIds)).thenReturn(items);
+        when(inventory.add(any())).thenReturn(true);
     }
 
     @Test
@@ -137,5 +139,22 @@ public class PlayerGiveTest {
                              Alex gives you reward in return.
                              
                              Alex accepts your cheese but needs something else to go with them.""", result);
+    }
+
+    @Test
+    public void givenInventoryFull_whenGive_shouldLeaveRewardsAtLocation() {
+        ExchangeResult exchangeResult =
+                new ExchangeResult.Builder().consumedItems(items).rewardedItems(List.of(reward)).build();
+        when(inventory.add(reward)).thenReturn(false);
+        when(character.trade(items)).thenReturn(exchangeResult);
+
+        String result = player.give("Alex", itemIds);
+
+        verify(location).leaveItem(reward);
+        assertEquals("""
+                             Alex gives you reward in return.
+                             
+                             However, as your inventory is full, you had to leave reward at your location. You need to take some items off your inventory to pick them up.""",
+                     result);
     }
 }

@@ -34,4 +34,25 @@ public class StringUtilsTest {
 
         assertEquals("apple, orange, banana, and pear", output);
     }
+
+    @Test
+    public void givenStringOfDuplicatedSubstrings_whenNormalizeAndDedupe_shouldReturnDedupedListOfSubstrings() {
+        List<String> output = StringUtils.splitAndDedupe("apple,apple,apple,orange,orange,grape", ",");
+
+        assertEquals(List.of("apple", "orange", "grape"), output);
+    }
+
+    @Test
+    public void givenStringWithExcessSpaces_whenNormalizeAndDedupe_shouldReturnListOfStrippedSubstrings() {
+        List<String> output = StringUtils.splitAndDedupe("  apple  ,  orange  ,   grape  ", ",");
+
+        assertEquals(List.of("apple", "orange", "grape"), output);
+    }
+
+    @Test
+    public void givenStringWithBlanks_whenNormalizeAndDedupe_shouldListOfSubstringsWithoutBlanks() {
+        List<String> output = StringUtils.splitAndDedupe(" ,apple, ,orange, , ,grape, , ", ",");
+
+        assertEquals(List.of("apple", "orange", "grape"), output);
+    }
 }

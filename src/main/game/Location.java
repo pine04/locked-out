@@ -24,8 +24,8 @@ public class Location {
         return Optional.empty();
     }
 
-    public boolean leaveItem(Item item) {
-        return true;
+    public void leaveItem(Item item) {
+        items.add(item);
     }
 
     public Optional<Fixture> getFixture(String identifier) {

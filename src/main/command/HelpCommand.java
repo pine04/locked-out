@@ -36,6 +36,9 @@ public class HelpCommand extends Command {
 
     @Override
     public String execute() {
-        return commandParser.getRegisteredCommands().stream().map(command -> String.format("%s - %s", command.getSyntax(), command.getDescription())).collect(Collectors.joining("\n"));
+        return commandParser.getRegisteredCommands()
+                .stream()
+                .map(command -> String.format("%s - %s", command.getSyntax(), command.getDescription()))
+                .collect(Collectors.joining("\n"));
     }
 }

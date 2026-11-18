@@ -9,8 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GiveCommandTest {
@@ -67,6 +67,15 @@ public class GiveCommandTest {
         CommandParseStatus status = command.tryParse("give   ,   ,  , -> Alex");
 
         assertEquals(CommandParseStatus.WRONG_SYNTAX, status);
+    }
+
+    @Test
+    public void givenCommandWithDuplicateItemIds_whenParse_shouldExecuteWithDedupedIds() {
+        CommandParseStatus status = command.tryParse("give ring,ring,RiNG  ,  RIng, rING -> Alex");
+        command.execute();
+
+        assertEquals(CommandParseStatus.SUCCESS, status);
+        verify(player).give("alex", List.of("ring"));
     }
 
     @Test

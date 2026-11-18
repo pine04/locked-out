@@ -1,13 +1,18 @@
 package game;
 
+import utils.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Player {
-    private Inventory inventory;
-    private Location location;
+    private final Inventory inventory;
+    private final Location location;
 
-    public Player(Location startLocation) {
-
+    public Player(Location startLocation, Inventory inventory) {
+        this.inventory = inventory;
+        location = startLocation;
     }
 
     public String look() {
@@ -31,7 +36,21 @@ public class Player {
     }
 
     public String give(String characterIdentifier, List<String> itemIdentifiers) {
-        return "";
+        Optional<Character> characterOpt = location.getCharacter(characterIdentifier);
+        if (characterOpt.isEmpty()) {
+            return String.format("There is no character named %s in this location.", characterIdentifier);
+        }
+
+        List<Item> items = inventory.getMany(itemIdentifiers);
+        if (items.size() < itemIdentifiers.size()) {
+            return buildMissingItemsMessage(itemIdentifiers, items);
+        }
+
+        Character character = characterOpt.get();
+        ExchangeResult giveResult = character.trade(items);
+        List<Item> abandonedItems = handleExchangeResult(giveResult);
+
+        return buildGiveMessage(character, giveResult, abandonedItems);
     }
 
     public String useOn(String fixtureIdentifier, List<String> itemIdentifiers) {
@@ -44,5 +63,69 @@ public class Player {
 
     public String unlockExitTo(String locationIdentifier, String keyIdentifier) {
         return "";
+    }
+
+    private List<Item> handleExchangeResult(ExchangeResult exchangeResult) {
+        for (Item consumedItem : exchangeResult.getConsumedItems()) {
+            inventory.remove(consumedItem.identifier());
+        }
+
+        for (Item withheldItem : exchangeResult.getWithheldItems()) {
+            inventory.remove(withheldItem.identifier());
+        }
+
+        List<Item> abandonedItems = new ArrayList<>();
+        for (Item rewardedItem : exchangeResult.getRewardedItems()) {
+            boolean added = inventory.add(rewardedItem);
+            if (!added) {
+                location.leaveItem(rewardedItem);
+                abandonedItems.add(rewardedItem);
+            }
+        }
+
+        return abandonedItems;
+    }
+
+    private String buildMissingItemsMessage(List<String> itemIdentifiers, List<Item> actualItems) {
+        List<String> actualItemIds = actualItems.stream().map(Item::identifier).toList();
+        List<String> nonExistentIds = itemIdentifiers.stream().filter(id -> !actualItemIds.contains(id)).toList();
+        return String.format("You don't have these items in your inventory: %s.",
+                             StringUtils.joinWithAnd(nonExistentIds));
+    }
+
+    private String buildGiveMessage(Character character, ExchangeResult exchangeResult, List<Item> abandonedItems) {
+        List<String> messages = new ArrayList<>();
+        if (!exchangeResult.getRejectedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getRejectedItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("%s doesn't seem interested in %s.", character.getName(),
+                                       StringUtils.joinWithAnd(itemNames)));
+        }
+        if (!exchangeResult.getReturnedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getReturnedItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("%s feels thankful for your %s and has given them back.", character.getName(),
+                                       StringUtils.joinWithAnd(itemNames)));
+        }
+        if (!exchangeResult.getRewardedItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getRewardedItems().stream().map(Item::identifier).toList();
+            messages.add(String.format("%s gives you %s in return.", character.getName(),
+                                       StringUtils.joinWithAnd(itemNames)));
+        }
+        if (!abandonedItems.isEmpty()) {
+            messages.add(buildAbandonedItemsMessage(abandonedItems));
+        }
+        if (!exchangeResult.getWithheldItems().isEmpty()) {
+            List<String> itemNames = exchangeResult.getWithheldItems().stream().map(Item::identifier).toList();
+            messages.add(
+                    String.format("%s accepts your %s but needs something else to go with them.", character.getName(),
+                                  StringUtils.joinWithAnd(itemNames)));
+        }
+        return String.join("\n\n", messages);
+    }
+
+    private String buildAbandonedItemsMessage(List<Item> items) {
+        List<String> itemNames = items.stream().map(Item::identifier).toList();
+        return String.format(
+                "However, as your inventory is full, you had to leave %s at your location. You need to take some items off your inventory to pick them up.",
+                StringUtils.joinWithAnd(itemNames));
     }
 }

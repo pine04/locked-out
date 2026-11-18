@@ -24,8 +24,8 @@ public class Location {
         return Optional.empty();
     }
 
-    public boolean leaveItem(Item item) {
-        return true;
+    public void leaveItem(Item item) {
+        items.add(item);
     }
 
     public Optional<Fixture> getFixture(String identifier) {
@@ -33,7 +33,9 @@ public class Location {
     }
 
     public Optional<Character> getCharacter(String identifier) {
-        return Optional.empty();
+        return characters.stream()
+                .filter(character -> character.getIdentifier().equals(identifier))
+                .findFirst();
     }
 
     public GetDestinationResult getLocation(String identifier) {

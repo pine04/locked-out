@@ -23,10 +23,10 @@ public class Exit {
         return destination.getIdentifier().equals(destinationIdentifier);
     }
 
-    public UnlockExitStatus unlock(String keyIdentifier) {
+    public UnlockExitStatus unlock(Item key) {
         if (isUnlocked) {
             return UnlockExitStatus.ALREADY_UNLOCKED;
-        } else if (acceptedKey.equals(keyIdentifier)) {
+        } else if (acceptedKey.equals(key.identifier())) {
             isUnlocked = true;
             return UnlockExitStatus.SUCCESS;
         } else {

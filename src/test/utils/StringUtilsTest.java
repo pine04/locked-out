@@ -55,4 +55,24 @@ public class StringUtilsTest {
 
         assertEquals(List.of("apple", "orange", "grape"), output);
     }
+
+    @Test
+    public void givenEmptyString_whenCapitalize_shouldReturnEmptyString() {
+        assertEquals("", StringUtils.capitalize(""));
+    }
+
+    @Test
+    public void givenBlankString_whenCapitalize_shouldReturnSameString() {
+        assertEquals("   ", StringUtils.capitalize("   "));
+    }
+
+    @Test
+    public void givenUncapitalizedString_whenCapitalize_shouldReturnCapitalizedString() {
+        assertEquals("Hello world!", StringUtils.capitalize("hello world!"));
+    }
+
+    @Test
+    public void givenCapitalizedString_whenCapitalize_shouldReturnSameString() {
+        assertEquals("Hello world!", StringUtils.capitalize("Hello world!"));
+    }
 }

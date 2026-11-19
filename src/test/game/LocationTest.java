@@ -2,12 +2,19 @@ package game;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LocationTest {
     private Location room;
     private Location hallway;
+    @Mock
+    private Item key;
 
     @Before
     public void setUp() throws Exception {
@@ -41,5 +48,20 @@ public class LocationTest {
 
         assertEquals(GetDestinationStatus.NONEXISTENT_DESTINATION, result.status());
         assertTrue(result.location().isEmpty());
+    }
+
+    @Test
+    public void givenNonexistentDestination_whenUnlockExit_shouldReturnNonexistentDestination() {
+        Location.connect(room, hallway, "hallway key");
+
+        assertEquals(UnlockExitStatus.NONEXISTENT_DESTINATION, room.unlockExit("garden", key));
+    }
+
+    @Test
+    public void givenExistingDestination_whenUnlockExit_shouldCallExitUnlockAndReturnItsResult() {
+        Location.connect(room, hallway, "hallway key");
+        when(key.identifier()).thenReturn("hallway key");
+
+        assertEquals(UnlockExitStatus.SUCCESS, room.unlockExit("hallway", key));
     }
 }

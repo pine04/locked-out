@@ -55,8 +55,13 @@ public class Location {
         return new GetDestinationResult(GetDestinationStatus.SUCCESS, destinationLocation, "");
     }
 
-    public UnlockExitStatus unlockExit(String locationIdentifier, String keyIdentifier) {
-        return UnlockExitStatus.SUCCESS;
+    public UnlockExitStatus unlockExit(String locationIdentifier, Item key) {
+        Optional<Exit> exitOpt = exits.stream().filter(exit -> exit.leadsTo(locationIdentifier)).findFirst();
+        if (exitOpt.isEmpty()) {
+            return UnlockExitStatus.NONEXISTENT_DESTINATION;
+        }
+
+        return exitOpt.get().unlock(key);
     }
 
     public String getIdentifier() {

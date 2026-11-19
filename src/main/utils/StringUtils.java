@@ -27,4 +27,11 @@ public class StringUtils {
                 .distinct()
                 .toList();
     }
+
+    public static String capitalize(String inputString) {
+        if (inputString.isBlank()) {
+            return inputString;
+        }
+        return inputString.substring(0, 1).toUpperCase() + inputString.substring(1);
+    }
 }

@@ -1,6 +1,7 @@
 package game;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Inventory {
     private final int size;
@@ -16,6 +17,10 @@ public class Inventory {
 
     public boolean has(String identifier) {
         return true;
+    }
+
+    public Optional<Item> get(String identifier) {
+        return items.stream().filter(item -> item.identifier().equals(identifier)).findFirst();
     }
 
     public List<Item> getMany(List<String> identifiers) {

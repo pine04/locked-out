@@ -1,8 +1,3 @@
-//public class Main {
-  //  public static void main(String[] args) {
-        // start main.game :)
-//    }
-//}
 import game.Game;
 
 public class Main {

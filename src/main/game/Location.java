@@ -17,13 +17,6 @@ public class Location {
         this.description = description;
     }
 
-    public String describe() {
-        return "";
-    }
-
-    public Optional<Item> getItem(String identifier) {
-        return Optional.empty();
-    }
 
     public void leaveItem(Item item) {
         items.add(item);
@@ -76,5 +69,44 @@ public class Location {
     public static void connect(Location origin, Location destination, String acceptedKey) {
         origin.exits.add(new Exit(destination, acceptedKey));
         destination.exits.add(new Exit(origin, acceptedKey));
+    }
+    // abdullah this side now i added these :
+    public void addItem(Item item) {
+        this.items.add(item);
+    }
+
+    public java.util.Optional<Item> getItem(String identifier) {
+        for (Item item : items) {
+            if (item.identifier().equalsIgnoreCase(identifier)) return java.util.Optional.of(item);
+        }
+        return java.util.Optional.empty();
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public String describe() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(description).append("\n");
+        if (!items.isEmpty()) {
+            sb.append("You see items: ");
+            for (Item item : items) sb.append(item.identifier()).append(", ");
+            sb.append("\n");
+        }
+        if (!characters.isEmpty()) {
+            sb.append("People here: ");
+            for (Character c : characters) sb.append(c.getName()).append(", ");
+            sb.append("\n");
+        }
+        if (!fixtures.isEmpty()) {
+            sb.append("You notice: ");
+            for (Fixture f : fixtures) sb.append(f.getName()).append(", ");
+            sb.append("\n");
+        }
+        if (items.isEmpty() && characters.isEmpty() && fixtures.isEmpty()) {
+            sb.append("There is nothing else here.\n");
+        }
+        return sb.toString();
     }
 }

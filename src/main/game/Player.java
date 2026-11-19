@@ -14,21 +14,33 @@ public class Player {
         this.inventory = inventory;
         location = startLocation;
     }
-
+    // abdullah: i added this file line 17 to 35 in player.java and relevent to location:80 to 118
     public String look() {
-        return "";
+        if (location == null) return "You are nowhere.";
+        return location.describe();
     }
 
     public String pickUp(String identifier) {
-        return "";
+        java.util.Optional<Item> itemOpt = location.getItem(identifier);
+        if (itemOpt.isEmpty()) {
+            return "There is no '" + identifier + "' here.";
+        }
+        Item item = itemOpt.get();
+        if (inventory.add(item)) {
+            location.removeItem(item);
+            return "You picked up the " + item.identifier() + ".";
+        } else {
+            return "Your inventory is full!";
+        }
     }
 
     public String drop(String identifier) {
         return "";
     }
-
-    public String showInventory() {
-        return "";
+    //abdullah do this
+    public String showInventory()
+    {
+        return inventory.listItemsAsString();
     }
 
     public String talkTo(String characterIdentifier) {

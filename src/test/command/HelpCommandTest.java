@@ -6,10 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HelpCommandTest {
@@ -22,15 +26,28 @@ public class HelpCommandTest {
     @Before
     public void setUp() throws Exception {
         command = new HelpCommand(player, commandParser);
+
+        Command command1 = Mockito.mock(Command.class);
+        when(command1.getSyntax()).thenReturn("give <items> -> <character>");
+        when(command1.getDescription()).thenReturn("Give some items in your inventory to a character.");
+
+        Command command2 = Mockito.mock(Command.class);
+        when(command2.getSyntax()).thenReturn("use <items> -> <fixture>");
+        when(command2.getDescription()).thenReturn("Use some items in your inventory on a fixture.");
+
+        when(commandParser.getRegisteredCommands()).thenReturn(List.of(command1, command2));
     }
 
     @Test
-    public void givenCorrectCommand_whenParseAndExecute_shouldExecute() {
+    public void givenCorrectCommand_whenParseAndExecute_shouldReturnCommandList() {
         CommandParseStatus status = command.tryParse("help");
-        command.execute();
+        String result = command.execute();
 
         assertEquals(CommandParseStatus.SUCCESS, status);
         verify(commandParser).getRegisteredCommands();
+        assertEquals("""
+                             give <items> -> <character> - Give some items in your inventory to a character.
+                             use <items> -> <fixture> - Use some items in your inventory on a fixture.""", result);
     }
 
     @Test

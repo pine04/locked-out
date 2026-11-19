@@ -1,5 +1,6 @@
 package game;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,10 +15,17 @@ import static org.mockito.Mockito.when;
 public class ExitTest {
     @Mock
     private Location location;
+    @Mock
+    private Item key;
+
+    @Before
+    public void setUp() {
+        when(location.getIdentifier()).thenReturn("kitchen");
+        when(key.identifier()).thenReturn("key");
+    }
 
     @Test
     public void givenCorrectDestinationId_whenCallLeadsTo_shouldReturnTrue() {
-        when(location.getIdentifier()).thenReturn("kitchen");
         Exit exit = new Exit(location);
 
         assertTrue(exit.leadsTo("kitchen"));
@@ -25,7 +33,6 @@ public class ExitTest {
 
     @Test
     public void givenIncorrectDestinationId_whenCallLeadsTo_shouldReturnFalse() {
-        when(location.getIdentifier()).thenReturn("kitchen");
         Exit exit = new Exit(location);
 
         assertFalse(exit.leadsTo("hallway"));
@@ -35,14 +42,14 @@ public class ExitTest {
     public void givenAlreadyUnlockedExit_whenCallUnlock_shouldReturnAlreadyUnlockedStatus() {
         Exit exit = new Exit(location);
 
-        assertEquals(UnlockExitStatus.ALREADY_UNLOCKED, exit.unlock("key"));
+        assertEquals(UnlockExitStatus.ALREADY_UNLOCKED, exit.unlock(key));
     }
 
     @Test
     public void givenLockedExit_whenCallUnlockWithCorrectKey_shouldUnlockAndReturnSuccessStatus() {
         Exit exit = new Exit(location, "key");
 
-        UnlockExitStatus unlockStatus = exit.unlock("key");
+        UnlockExitStatus unlockStatus = exit.unlock(key);
         Optional<Location> locationOpt = exit.getLocationIfUnlocked();
 
         assertEquals(UnlockExitStatus.SUCCESS, unlockStatus);
@@ -52,8 +59,9 @@ public class ExitTest {
     @Test
     public void givenLockedExit_whenCallUnlockWithIncorrectKey_shouldReturnIncorrectKeyStatusAndNotUnlock() {
         Exit exit = new Exit(location, "key");
+        when(key.identifier()).thenReturn("wrong key");
 
-        UnlockExitStatus unlockStatus = exit.unlock("wrong key");
+        UnlockExitStatus unlockStatus = exit.unlock(key);
         Optional<Location> locationOpt = exit.getLocationIfUnlocked();
 
         assertEquals(UnlockExitStatus.INCORRECT_KEY, unlockStatus);
@@ -82,7 +90,7 @@ public class ExitTest {
     public void givenLockedExit_whenCallUnlockWithCorrectKeyThenGetLocationIfUnlocked_shouldReturnDestination() {
         Exit exit = new Exit(location, "key");
 
-        UnlockExitStatus unlockStatus = exit.unlock("key");
+        UnlockExitStatus unlockStatus = exit.unlock(key);
         Optional<Location> result = exit.getLocationIfUnlocked();
 
         assertEquals(location, result.orElse(null));

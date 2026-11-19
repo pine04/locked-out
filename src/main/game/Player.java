@@ -86,6 +86,22 @@ public class Player {
     }
 
     public String unlockExitTo(String locationIdentifier, String keyIdentifier) {
+        Optional<Item> keyOpt = inventory.get(keyIdentifier);
+        if (keyOpt.isEmpty()) {
+            return String.format("You don't have %s in your inventory.", keyIdentifier);
+        }
+        UnlockExitStatus status = location.unlockExit(locationIdentifier, keyOpt.get());
+        switch (status) {
+            case SUCCESS:
+                inventory.remove(keyIdentifier);
+                return String.format("Unlocked %s with %s.", locationIdentifier, keyIdentifier);
+            case ALREADY_UNLOCKED:
+                return String.format("%s already unlocked.", StringUtils.capitalize(locationIdentifier));
+            case INCORRECT_KEY:
+                return String.format("You can't use this key to unlock %s.", locationIdentifier);
+            case NONEXISTENT_DESTINATION:
+                return String.format("You can't go to %s from here.", locationIdentifier);
+        }
         return "";
     }
 

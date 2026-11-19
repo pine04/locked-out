@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class Player {
     private final Inventory inventory;
-    private final Location location;
+    private Location location;
 
     public Player(Location startLocation, Inventory inventory) {
         this.inventory = inventory;
@@ -72,6 +72,16 @@ public class Player {
     }
 
     public String moveTo(String locationIdentifier) {
+        GetDestinationResult destinationResult = location.getLocation(locationIdentifier);
+        switch (destinationResult.status()) {
+            case SUCCESS:
+                location = destinationResult.location().orElse(location);
+                return String.format("Moved to %s.", locationIdentifier);
+            case EXIT_LOCKED:
+                return String.format("The exit to %s is currently locked. You can open it with %s.", locationIdentifier, destinationResult.requiredKey());
+            case NONEXISTENT_DESTINATION:
+                return String.format("You can't go to %s from here.", locationIdentifier);
+        }
         return "";
     }
 

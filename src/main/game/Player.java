@@ -14,7 +14,8 @@ public class Player {
         this.inventory = inventory;
         location = startLocation;
     }
-    // abdullah: i added this file line 17 to 35 in player.java and relevent to location:80 to 118
+
+
     public String look() {
         if (location == null) return "You are nowhere.";
         return location.describe();
@@ -37,7 +38,6 @@ public class Player {
     public String drop(String identifier) {
         return "";
     }
-    //abdullah do this
     public String showInventory()
     {
         return inventory.listItemsAsString();

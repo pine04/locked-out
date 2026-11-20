@@ -6,7 +6,7 @@ import java.util.ArrayList; // (abdullah) added this import Added = new ArrayLis
 
 public class Inventory {
     private final int size;
-    private List<Item> items = new ArrayList<>(); // <-- Added = new ArrayList<>()
+    private List<Item> items = new ArrayList<>(); // < Added = new ArrayList<>()
 
     public Inventory(int size) {
         this.size = size;
@@ -32,10 +32,6 @@ public class Inventory {
     public List<Item> getMany(List<String> identifiers) {
         return List.of();
     }
-
-
-
-    //  Abdullah code below please dont change anythign
 
     //Used by PickUpCommand
     public boolean add(Item item) {

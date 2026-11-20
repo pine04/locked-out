@@ -15,9 +15,6 @@ public class Game {
     private CommandParser commandParser;
     private boolean hasWon;
 
-    //abdullah added the below one
-    // to add command of player help please dont change
-
     public void setUp() {
         //Initialize the parser
         commandParser = new CommandParser();
@@ -67,6 +64,6 @@ public class Game {
 
     public void win() {
         hasWon = true;
-        System.out.println("MUBARAK HO YOU WIN ");
+        System.out.println("--CONGRATULATIONS YOU WIN--");
     }
 }

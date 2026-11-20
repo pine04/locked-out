@@ -70,16 +70,16 @@ public class Location {
         origin.exits.add(new Exit(destination, acceptedKey));
         destination.exits.add(new Exit(origin, acceptedKey));
     }
-    // abdullah this side now i added these :
+
     public void addItem(Item item) {
         this.items.add(item);
     }
 
-    public java.util.Optional<Item> getItem(String identifier) {
+    public Optional<Item> getItem(String identifier) {
         for (Item item : items) {
-            if (item.identifier().equalsIgnoreCase(identifier)) return java.util.Optional.of(item);
+            if (item.identifier().equalsIgnoreCase(identifier)) return Optional.of(item);
         }
-        return java.util.Optional.empty();
+        return Optional.empty();
     }
 
     public void removeItem(Item item) {

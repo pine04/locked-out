@@ -15,20 +15,32 @@ public class Player {
         location = startLocation;
     }
 
+
     public String look() {
-        return "";
+        if (location == null) return "You are nowhere.";
+        return location.describe();
     }
 
     public String pickUp(String identifier) {
-        return "";
+        java.util.Optional<Item> itemOpt = location.getItem(identifier);
+        if (itemOpt.isEmpty()) {
+            return "There is no '" + identifier + "' here.";
+        }
+        Item item = itemOpt.get();
+        if (inventory.add(item)) {
+            location.removeItem(item);
+            return "You picked up the " + item.identifier() + ".";
+        } else {
+            return "Your inventory is full!";
+        }
     }
 
     public String drop(String identifier) {
         return "";
     }
-
-    public String showInventory() {
-        return "";
+    public String showInventory()
+    {
+        return inventory.listItemsAsString();
     }
 
     public String talkTo(String characterIdentifier) {

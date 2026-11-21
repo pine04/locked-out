@@ -57,7 +57,11 @@ public class Player {
     }
 
     public String talkTo(String characterIdentifier) {
-        return "";
+        Optional<Character> charOpt = location.getCharacter(characterIdentifier);
+        if (charOpt.isEmpty()) {
+            return "There is no " + characterIdentifier + " here.";
+        }
+        return charOpt.get().talk();
     }
 
     public String give(String characterIdentifier, List<String> itemIdentifiers) {

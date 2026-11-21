@@ -8,6 +8,7 @@ import command.LookCommand;
 import command.PickUpCommand;
 import command.DropCommand;
 import command.InventoryCommand;
+import command.TalkCommand;
 
 
 public class Game {
@@ -17,6 +18,7 @@ public class Game {
 
     public void setUp() {
         commandParser = new CommandParser();
+
 
 
         Location startRoom = new Location(
@@ -40,6 +42,8 @@ public class Game {
         commandParser.registerCommand(new PickUpCommand(player));
         commandParser.registerCommand(new InventoryCommand(player));
         commandParser.registerCommand(new DropCommand(player));
+        commandParser.registerCommand(new TalkCommand(player));
+
 
         System.out.println("Welcome to Locked Out! Type 'help' to start.");
     }

@@ -34,9 +34,22 @@ public class Player {
             return "Your inventory is full!";
         }
     }
-
     public String drop(String identifier) {
-        return "";
+        if (!inventory.has(identifier)) {
+            return "You don't have a '" + identifier + "' in your inventory.";
+        }
+
+        Optional<Item> itemOpt = inventory.get(identifier);
+        if (itemOpt.isPresent()) {
+            Item item = itemOpt.get();
+
+            inventory.remove(identifier);
+            location.addItem(item);
+
+            return "You dropped the " + item.identifier() + ".";
+        }
+
+        return "You can't drop that right now.";
     }
     public String showInventory()
     {

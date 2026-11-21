@@ -3,10 +3,10 @@ package game;
 import command.CommandParseResult;
 
 import java.util.Scanner;
-//abdullah added these too add there part in it :
 import command.HelpCommand;
 import command.LookCommand;
 import command.PickUpCommand;
+import command.DropCommand;
 import command.InventoryCommand;
 
 
@@ -16,10 +16,9 @@ public class Game {
     private boolean hasWon;
 
     public void setUp() {
-        //Initialize the parser
         commandParser = new CommandParser();
 
-        // 2. Setup the world
+
         Location startRoom = new Location(
                 "hallway",
                 "You are standing in a dimly lit hallway.");
@@ -32,16 +31,15 @@ public class Game {
                 "A burning torch.")
         );
 
-        //Setup the player (with inventory)inventory size is 15
         Inventory playerInventory = new Inventory(15);
         player = new Player(startRoom, playerInventory);
 
-        // Register all commands
         commandParser.registerCommand(new HelpCommand(player, commandParser));
-        //becasue of line 10 i need to change this as
+
         commandParser.registerCommand(new LookCommand(player));
         commandParser.registerCommand(new PickUpCommand(player));
         commandParser.registerCommand(new InventoryCommand(player));
+        commandParser.registerCommand(new DropCommand(player));
 
         System.out.println("Welcome to Locked Out! Type 'help' to start.");
     }

@@ -6,7 +6,7 @@ import java.util.ArrayList; // (abdullah) added this import Added = new ArrayLis
 
 public class Inventory {
     private final int size;
-    private List<Item> items = new ArrayList<>(); // < Added = new ArrayList<>()
+    private List<Item> items = new ArrayList<>();
 
     public Inventory(int size) {
         this.size = size;

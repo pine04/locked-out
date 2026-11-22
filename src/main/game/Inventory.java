@@ -2,14 +2,15 @@ package game;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.ArrayList; // (abdullah) added this import Added = new ArrayList<>()
+import java.util.ArrayList;
 
 public class Inventory {
     private final int size;
-    private List<Item> items = new ArrayList<>();
+    private List<Item> items;
 
     public Inventory(int size) {
         this.size = size;
+        this.items=new ArrayList<>(size);
     }
 
     public String listItemsAsString() {
@@ -21,10 +22,6 @@ public class Inventory {
         return sb.toString();
     }
 
-    public boolean has(String identifier) {
-        return true; // We can fix this later
-    }
-
     public Optional<Item> get(String identifier) {
         return items.stream().filter(item -> item.identifier().equals(identifier)).findFirst();
     }
@@ -33,7 +30,6 @@ public class Inventory {
         return List.of();
     }
 
-    //Used by PickUpCommand
     public boolean add(Item item) {
         if (items.size() >= size) {
             return false; // Inventory is full

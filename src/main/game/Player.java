@@ -22,7 +22,7 @@ public class Player {
     }
 
     public String pickUp(String identifier) {
-        java.util.Optional<Item> itemOpt = location.getItem(identifier);
+        Optional<Item> itemOpt = location.getItem(identifier);
         if (itemOpt.isEmpty()) {
             return "There is no '" + identifier + "' here.";
         }
@@ -35,21 +35,15 @@ public class Player {
         }
     }
     public String drop(String identifier) {
-        if (!inventory.has(identifier)) {
-            return "You don't have a '" + identifier + "' in your inventory.";
-        }
 
         Optional<Item> itemOpt = inventory.get(identifier);
-        if (itemOpt.isPresent()) {
-            Item item = itemOpt.get();
-
-            inventory.remove(identifier);
-            location.addItem(item);
-
-            return "You dropped the " + item.identifier() + ".";
+        if (itemOpt.isEmpty()) {
+            return "You don't have a '" + identifier + "' in your inventory.";
         }
-
-        return "You can't drop that right now.";
+        Item item = itemOpt.get();
+        inventory.remove(identifier);
+        location.leaveItem(item);
+        return "You dropped the " + item.identifier() + ".";
     }
     public String showInventory()
     {

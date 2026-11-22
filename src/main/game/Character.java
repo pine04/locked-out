@@ -5,11 +5,15 @@ import java.util.List;
 public class Character {
     private final String identifier;
     private final String name;
+    private final String dialogue;
     private ExchangeTable exchangeTable;
 
-    public Character(String identifier, String name) {
+
+
+    public Character(String identifier, String name,String dialogue) {
         this.identifier = identifier;
         this.name = name;
+        this.dialogue=dialogue;
     }
 
     public String talk() {
@@ -27,4 +31,5 @@ public class Character {
     public String getName() {
         return name;
     }
+
 }

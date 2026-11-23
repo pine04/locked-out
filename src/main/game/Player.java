@@ -16,23 +16,47 @@ public class Player {
     }
 
     public String look() {
-        return "";
+        if (location == null) {
+            return "You are nowhere.";
+        }
+        return location.describe();
     }
 
     public String pickUp(String identifier) {
-        return "";
+        Optional<Item> itemOpt = location.getItem(identifier);
+        if (itemOpt.isEmpty()) {
+            return "There is no '" + identifier + "' here.";
+        }
+        Item item = itemOpt.get();
+        if (inventory.add(item)) {
+            location.removeItem(item);
+            return "You picked up the " + item.identifier() + ".";
+        } else {
+            return "Your inventory is full!";
+        }
     }
 
     public String drop(String identifier) {
-        return "";
+        Optional<Item> itemOpt = inventory.get(identifier);
+        if (itemOpt.isEmpty()) {
+            return "You don't have a '" + identifier + "' in your inventory.";
+        }
+        Item item = itemOpt.get();
+        inventory.remove(identifier);
+        location.leaveItem(item);
+        return "You dropped the " + item.identifier() + ".";
     }
 
     public String showInventory() {
-        return "";
+        return inventory.listItemsAsString();
     }
 
     public String talkTo(String characterIdentifier) {
-        return "";
+        Optional<Character> charOpt = location.getCharacter(characterIdentifier);
+        if (charOpt.isEmpty()) {
+            return "There is no " + characterIdentifier + " here.";
+        }
+        return charOpt.get().talk();
     }
 
     public String give(String characterIdentifier, List<String> itemIdentifiers) {
@@ -78,7 +102,8 @@ public class Player {
                 location = destinationResult.location().orElse(location);
                 return String.format("Moved to %s.", locationIdentifier);
             case EXIT_LOCKED:
-                return String.format("The exit to %s is currently locked. You can open it with %s.", locationIdentifier, destinationResult.requiredKey());
+                return String.format("The exit to %s is currently locked. You can open it with %s.", locationIdentifier,
+                                     destinationResult.requiredKey());
             case NONEXISTENT_DESTINATION:
                 return String.format("You can't go to %s from here.", locationIdentifier);
         }

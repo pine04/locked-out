@@ -3,6 +3,12 @@ package game;
 import command.CommandParseResult;
 
 import java.util.Scanner;
+import command.HelpCommand;
+import command.LookCommand;
+import command.PickUpCommand;
+import command.DropCommand;
+import command.InventoryCommand;
+import command.TalkCommand;
 
 public class Game {
     private Player player;
@@ -10,7 +16,31 @@ public class Game {
     private boolean hasWon;
 
     public void setUp() {
+        commandParser = new CommandParser();
 
+        Location startRoom = new Location(
+                "hallway",
+                "You are standing in a dimly lit hallway.");
+        startRoom.addItem(new Item(
+                "ring",
+                "A shiny gold ring.")
+        );
+        startRoom.addItem(new Item(
+                "torch",
+                "A burning torch.")
+        );
+
+        Inventory playerInventory = new Inventory(15);
+        player = new Player(startRoom, playerInventory);
+
+        commandParser.registerCommand(new HelpCommand(player, commandParser));
+        commandParser.registerCommand(new LookCommand(player));
+        commandParser.registerCommand(new PickUpCommand(player));
+        commandParser.registerCommand(new InventoryCommand(player));
+        commandParser.registerCommand(new DropCommand(player));
+        commandParser.registerCommand(new TalkCommand(player));
+
+        System.out.println("Welcome to Locked Out! Type 'help' to start.");
     }
 
     public void play() {
@@ -18,6 +48,7 @@ public class Game {
         String input;
 
         while (!hasWon) {
+            System.out.print("> ");
             input = scanner.nextLine();
             CommandParseResult parseResult = commandParser.parse(input);
             switch (parseResult.status()) {
@@ -30,5 +61,6 @@ public class Game {
 
     public void win() {
         hasWon = true;
+        System.out.println("--CONGRATULATIONS YOU WIN--");
     }
 }

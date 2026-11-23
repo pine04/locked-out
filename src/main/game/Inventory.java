@@ -2,21 +2,24 @@ package game;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
 
 public class Inventory {
     private final int size;
-    private List<Item> items;
+    private final List<Item> items;
 
     public Inventory(int size) {
         this.size = size;
+        this.items=new ArrayList<>(size);
     }
 
     public String listItemsAsString() {
-        return "";
-    }
-
-    public boolean has(String identifier) {
-        return true;
+        if (items.isEmpty()) return "Your inventory is empty.";
+        StringBuilder sb = new StringBuilder("Inventory:\n");
+        for (Item item : items) {
+            sb.append("- ").append(item.identifier()).append("\n");
+        }
+        return sb.toString();
     }
 
     public Optional<Item> get(String identifier) {
@@ -28,10 +31,14 @@ public class Inventory {
     }
 
     public boolean add(Item item) {
+        if (items.size() >= size) {
+            return false;
+        }
+        items.add(item);
         return true;
     }
 
     public boolean remove(String identifier) {
-        return true;
+        return items.removeIf(item -> item.identifier().equalsIgnoreCase(identifier));
     }
 }

@@ -15,9 +15,10 @@ public class Player {
         location = startLocation;
     }
 
-
     public String look() {
-        if (location == null) return "You are nowhere.";
+        if (location == null) {
+            return "You are nowhere.";
+        }
         return location.describe();
     }
 
@@ -34,8 +35,8 @@ public class Player {
             return "Your inventory is full!";
         }
     }
-    public String drop(String identifier) {
 
+    public String drop(String identifier) {
         Optional<Item> itemOpt = inventory.get(identifier);
         if (itemOpt.isEmpty()) {
             return "You don't have a '" + identifier + "' in your inventory.";
@@ -45,8 +46,8 @@ public class Player {
         location.leaveItem(item);
         return "You dropped the " + item.identifier() + ".";
     }
-    public String showInventory()
-    {
+
+    public String showInventory() {
         return inventory.listItemsAsString();
     }
 
@@ -101,7 +102,8 @@ public class Player {
                 location = destinationResult.location().orElse(location);
                 return String.format("Moved to %s.", locationIdentifier);
             case EXIT_LOCKED:
-                return String.format("The exit to %s is currently locked. You can open it with %s.", locationIdentifier, destinationResult.requiredKey());
+                return String.format("The exit to %s is currently locked. You can open it with %s.", locationIdentifier,
+                                     destinationResult.requiredKey());
             case NONEXISTENT_DESTINATION:
                 return String.format("You can't go to %s from here.", locationIdentifier);
         }

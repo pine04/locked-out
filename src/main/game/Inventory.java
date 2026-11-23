@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Inventory {
     private final int size;
-    private List<Item> items;
+    private final List<Item> items;
 
     public Inventory(int size) {
         this.size = size;
@@ -32,7 +32,7 @@ public class Inventory {
 
     public boolean add(Item item) {
         if (items.size() >= size) {
-            return false; // Inventory is full
+            return false;
         }
         items.add(item);
         return true;

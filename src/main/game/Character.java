@@ -8,16 +8,14 @@ public class Character {
     private final String dialogue;
     private ExchangeTable exchangeTable;
 
-
-
-    public Character(String identifier, String name,String dialogue) {
+    public Character(String identifier, String name, String dialogue) {
         this.identifier = identifier;
         this.name = name;
-        this.dialogue=dialogue;
+        this.dialogue = dialogue;
     }
 
     public String talk() {
-        return "";
+        return dialogue;
     }
 
     public ExchangeResult trade(List<Item> items) {
@@ -31,5 +29,4 @@ public class Character {
     public String getName() {
         return name;
     }
-
 }

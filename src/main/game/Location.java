@@ -17,7 +17,6 @@ public class Location {
         this.description = description;
     }
 
-
     public void leaveItem(Item item) {
         items.add(item);
     }

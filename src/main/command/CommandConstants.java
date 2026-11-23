@@ -6,6 +6,9 @@ public class CommandConstants {
     public static final String HELP_COMMAND_SYNTAX = "help";
     public static final String HELP_COMMAND_DESCRIPTION = "Show a list of actions that the player can perform.";
 
+    public static final String QUIT_COMMAND_SYNTAX = "quit";
+    public static final String QUIT_COMMAND_DESCRIPTION = "Quit the game. Your progress is not saved.";
+
     public static final String LOOK_COMMAND_SYNTAX = "look";
     public static final String LOOK_COMMAND_DESCRIPTION = "Show information about the player's current location.";
 

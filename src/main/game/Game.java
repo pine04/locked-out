@@ -1,19 +1,19 @@
 package game;
 
-import command.CommandParseResult;
+import command.*;
 
 import java.util.Scanner;
-import command.HelpCommand;
-import command.LookCommand;
-import command.PickUpCommand;
-import command.DropCommand;
-import command.InventoryCommand;
-import command.TalkCommand;
 
 public class Game {
     private Player player;
     private CommandParser commandParser;
     private boolean hasWon;
+    private boolean isRunning;
+
+    public Game() {
+        hasWon = false;
+        isRunning = true;
+    }
 
     public void setUp() {
         commandParser = new CommandParser();
@@ -39,6 +39,7 @@ public class Game {
         commandParser.registerCommand(new InventoryCommand(player));
         commandParser.registerCommand(new DropCommand(player));
         commandParser.registerCommand(new TalkCommand(player));
+        commandParser.registerCommand(new QuitCommand(player, this));
 
         System.out.println("Welcome to Locked Out! Type 'help' to start.");
     }
@@ -47,7 +48,7 @@ public class Game {
         Scanner scanner = new Scanner(System.in);
         String input;
 
-        while (!hasWon) {
+        while (!hasWon && isRunning) {
             System.out.print("> ");
             input = scanner.nextLine();
             CommandParseResult parseResult = commandParser.parse(input);
@@ -62,5 +63,9 @@ public class Game {
     public void win() {
         hasWon = true;
         System.out.println("--CONGRATULATIONS YOU WIN--");
+    }
+
+    public void stop() {
+        isRunning = false;
     }
 }
